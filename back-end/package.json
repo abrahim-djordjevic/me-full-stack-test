@@ -7,17 +7,20 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "ts-node src/app.ts",
+    "start": "tsx src/app.ts",
     "test": "jest"
   },
   "dependencies": {
     "better-sqlite3": "^11.2.1",
     "connect-sqlite3": "^0.9.15",
     "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^4.19.2",
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
-    "sqlite": "^5.1.1"
+    "sqlite": "^5.1.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
