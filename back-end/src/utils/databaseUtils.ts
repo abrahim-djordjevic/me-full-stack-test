@@ -7,7 +7,7 @@ type StringMap<T = string> = { [key: string]: T };
 export default class databaseUtils {
     public constructor()
     {
-        this.db = new Database('./database/database.db', { verbose: console.log });
+        this.db = new Database('./database/database.db');
     }
 
 
@@ -29,17 +29,20 @@ export default class databaseUtils {
 
     public async addInitialData()
     {
+
+        const count = await this.getCarbonIntensityRecordsCount();
+        if(count > 0) return;
+
         const filePath = "./database/data.csv";
         const fileContent = fs.readFileSync(filePath, {encoding: 'utf-8'});
         const json = this.CSVToJSON(fileContent).filter(x => x !== undefined);
-        console.log(json.length);
         for(let i = 0; i < json.length; i++)
         {
             var query = `INSERT INTO CarbonIntensityRecords ("id", "from", "to", "intensity_forecast", "intensity_actual", "index", "gas", "coal", "biomass", "nuclear", "hydro", "imports", "wind",` +
                         `"solar", "other", "total")`+
                         `VALUES(NULL, '${json[i]['from']}', '${json[i]['to']}', ${json[i]['intensity_forecast']}, ${json[i]['intensity_actual']}, '${json[i]['index']}',` +
                         `${json[i]['gas']}, ${json[i]['coal']}, ${json[i]['biomass']}, ${json[i]['nuclear']}, ${json[i]['hydro']}, ${json[i]['imports']}, ${json[i]['wind']},` +
-                        `${json[i]['solar']}, ${json[i]['other']}, ${json[i]['total']});`
+                        `${json[i]['solar']}, ${json[i]['other']}, ${json[i]['total']})`
             await this.db.prepare(query).run();
         }
 
@@ -47,26 +50,34 @@ export default class databaseUtils {
 
     public async checkIfTableExists()
     {
-        var query = `SELECT count(*) as count FROM sqlite_sequence WHERE name='CarbonIntensityRecords';`;
+        var query = `SELECT count(*) as count FROM sqlite_master WHERE type='table' AND name='CarbonIntensityRecords'`;
         var count = (await this.db.prepare(query).all())[0].count;
         return count > 0;
     }
 
+    public async getCarbonIntensityRecordsCount()
+    {
+        var query = "SELECT count(*) as count FROM CarbonIntensityRecords";
+        const results = await this.db.prepare(query).all()[0].count;
+        return results;
+    }
+
     public async getAllCarbonIntensityRecords()
     {
-        var query = "SELECT * FROM CarbonIntensityRecords;";
+        var query = "SELECT * FROM CarbonIntensityRecords";
         const results = await this.db.prepare(query).all();
+        return results;
     }
 
     public async getCarbonIntensityRecordById(id: number)
     {
-        var query = `SELECT * FROM CarbonIntensityRecords WHERE id = ${id};`;
+        var query = `SELECT * FROM CarbonIntensityRecords WHERE id = ${id}`;
         const results = await this.db.prepare(query).all();
     }
 
     public async deleteCarbonIntensityRecordById(id: number)
     {
-        var query = `DELETE FROM CarbonIntensityRecords WHERE id = ${id};`;
+        var query = `DELETE FROM CarbonIntensityRecords WHERE id = ${id}`;
         const results = await this.db.prepare(query).all();
     }
 
@@ -113,7 +124,7 @@ export default class databaseUtils {
             ');';
         await this.db.prepare(query).run();
 
-	await this.addInitialData();
+        await this.addInitialData();
 
     }
 };

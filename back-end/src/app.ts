@@ -17,27 +17,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 let db = null;
-let exists = fs.existsSync("./database/database.db");
-const count = await utils.checkIfTableExists();
 // create db if needed
-if(exists)
-{
-    if(!count)
-    {
-        await utils.addInitialData();
-    }
-    console.log("database file exists");
-    await utils.getAllCarbonIntensityRecords()
-}
-else
-{
-    console.log("creating database");
-    db = new sqlite3.Database("./database/database.db",
-            sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
-                (data) => {
-                });
-    await utils.initialiseDatabase();
-}
+db = new sqlite3.Database("./database/database.db",
+                          sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+                          (data) => {
+                          });
+await utils.initialiseDatabase();
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
