@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3';
 import fs from 'fs';
+import CarbonIntensityRecord from './types/CarbonIntensityRecord';
 
 type StringMap<T = string> = { [key: string]: T };
 
@@ -31,6 +32,7 @@ export default class databaseUtils {
         const filePath = "./database/data.csv";
         const fileContent = fs.readFileSync(filePath, {encoding: 'utf-8'});
         const json = this.CSVToJSON(fileContent).filter(x => x !== undefined);
+        console.log(json.length);
         for(let i = 0; i < json.length; i++)
         {
             var query = `INSERT INTO CarbonIntensityRecords ("id", "from", "to", "intensity_forecast", "intensity_actual", "index", "gas", "coal", "biomass", "nuclear", "hydro", "imports", "wind",` +
@@ -43,15 +45,54 @@ export default class databaseUtils {
 
     }
 
+    public async checkIfTableExists()
+    {
+        var query = `SELECT count(*) as count FROM sqlite_sequence WHERE name='CarbonIntensityRecords';`;
+        var count = (await this.db.prepare(query).all())[0].count;
+        return count > 0;
+    }
+
     public async getAllCarbonIntensityRecords()
     {
-        var query = "SELECT * FROM CarbonIntensityRecords";
+        var query = "SELECT * FROM CarbonIntensityRecords;";
         const results = await this.db.prepare(query).all();
+    }
+
+    public async getCarbonIntensityRecordById(id: number)
+    {
+        var query = `SELECT * FROM CarbonIntensityRecords WHERE id = ${id};`;
+        const results = await this.db.prepare(query).all();
+    }
+
+    public async deleteCarbonIntensityRecordById(id: number)
+    {
+        var query = `DELETE FROM CarbonIntensityRecords WHERE id = ${id};`;
+        const results = await this.db.prepare(query).all();
+    }
+
+    public async insertCarbonIntensityRecord(record: CarbonIntensityRecord)
+    {
+        var query = `INSERT INTO CarbonIntensityRecords ("id", "from", "to", "intensity_forecast", "intensity_actual", "index", "gas", "coal", "biomass", "nuclear", "hydro", "imports", "wind",` +
+                    `"solar", "other", "total")`+
+                    `VALUES(NULL, '${record.from}', '${record.to}', ${record.intensity_forecast}, ${record.intensity_actual}, '${record.index}',` +
+                    `${record.gas}, ${record.coal}, ${record.biomass}, ${record.nuclear}, ${record.hydro}, ${record.imports}, ${record.wind},` +
+                    `${record.solar}, ${record.other}, ${record.total});`
+        await this.db.prepare(query).run();
+    }
+
+    public async updateCarbonIntensityRecord(record: CarbonIntensityRecord)
+    {
+        var query = `update CarbonIntensityRecords ` +
+                    `SET id = ${record.id}, from = '${record.from}', to = '${record.to}', intensity_forecast = ${record.intensity_forecast}, intensity_actual = ${record.intensity_actual}, ` +
+                    `index = '${record.index}', gas = ${record.gas}, coal = ${record.coal}, biomass = ${record.biomass}, nuclear = ${record.nuclear}, hydro = ${record.hydro}, ` +
+                    `imports = ${record.imports}, wind = ${record.wind}, solar = ${record.solar}, other = ${record.other}, total = ${record.total} ` +
+                    `WHERE id = ${record.id}`;
+        await this.db.prepare(query).run();
     }
 
     public async initialiseDatabase()
     {
-        var query = 'CREATE TABLE "CarbonIntensityRecords" (' +
+        var query = 'CREATE TABLE IF NOT EXISTS "CarbonIntensityRecords" (' +
             '"id"	INTEGER,' +
             '"from"	TEXT,' +
             '"to"	TEXT,' +
