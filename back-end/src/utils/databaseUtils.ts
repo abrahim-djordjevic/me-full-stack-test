@@ -72,17 +72,19 @@ export default class databaseUtils {
     public async getCarbonIntensityRecordById(id: number)
     {
         var query = `SELECT * FROM CarbonIntensityRecords WHERE id = ${id}`;
-        const results = await this.db.prepare(query).all();
+        const result = await this.db.prepare(query).all();
+        return result;
     }
 
     public async deleteCarbonIntensityRecordById(id: number)
     {
         var query = `DELETE FROM CarbonIntensityRecords WHERE id = ${id}`;
-        const results = await this.db.prepare(query).all();
+        const results = await this.db.prepare(query).run();
     }
 
     public async insertCarbonIntensityRecord(record: CarbonIntensityRecord)
     {
+
         var query = `INSERT INTO CarbonIntensityRecords ("id", "from", "to", "intensity_forecast", "intensity_actual", "index", "gas", "coal", "biomass", "nuclear", "hydro", "imports", "wind",` +
                     `"solar", "other", "total")`+
                     `VALUES(NULL, '${record.from}', '${record.to}', ${record.intensity_forecast}, ${record.intensity_actual}, '${record.index}',` +
@@ -94,9 +96,9 @@ export default class databaseUtils {
     public async updateCarbonIntensityRecord(record: CarbonIntensityRecord)
     {
         var query = `update CarbonIntensityRecords ` +
-                    `SET id = ${record.id}, from = '${record.from}', to = '${record.to}', intensity_forecast = ${record.intensity_forecast}, intensity_actual = ${record.intensity_actual}, ` +
-                    `index = '${record.index}', gas = ${record.gas}, coal = ${record.coal}, biomass = ${record.biomass}, nuclear = ${record.nuclear}, hydro = ${record.hydro}, ` +
-                    `imports = ${record.imports}, wind = ${record.wind}, solar = ${record.solar}, other = ${record.other}, total = ${record.total} ` +
+                    `SET 'id'=${record.id}, 'from'='${record.from}', 'to'='${record.to}', 'intensity_forecast'=${record.intensity_forecast}, 'intensity_actual'=${record.intensity_actual}, ` +
+                    `'index'='${record.index}', 'gas'=${record.gas}, 'coal'=${record.coal}, 'biomass'=${record.biomass}, 'nuclear'=${record.nuclear}, 'hydro'=${record.hydro}, ` +
+                    `'imports'=${record.imports}, 'wind'=${record.wind}, 'solar'=${record.solar}, 'other'=${record.other}, 'total'=${record.total} ` +
                     `WHERE id = ${record.id}`;
         await this.db.prepare(query).run();
     }

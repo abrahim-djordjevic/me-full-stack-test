@@ -12,7 +12,7 @@ const options =
                     description:"A simple API"
                 },
         },
-        apis:['./routes/*.ts']
+        apis:['./src/routes/*.ts']
 };
 
 export const specs = swaggerJsdoc(options);

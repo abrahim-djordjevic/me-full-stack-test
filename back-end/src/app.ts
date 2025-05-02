@@ -24,10 +24,9 @@ db = new sqlite3.Database("./database/database.db",
                           });
 await utils.initialiseDatabase();
 
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/', router);
+app.use('/api', router);
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

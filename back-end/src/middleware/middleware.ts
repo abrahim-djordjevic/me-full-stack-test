@@ -1,6 +1,6 @@
 // middleware.ts
 import express from "express";
-const session = require("express-session");
+import session from "express-session"
 
 // Augment express-session with a custom SessionData object
 declare module "express-session" {
