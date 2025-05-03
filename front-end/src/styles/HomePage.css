@@ -1,0 +1,15 @@
+.home-page-header {
+    margin-bottom:"20px";
+    margin-top:"20px";
+    font-weight:"bold";
+}
+
+.home-page-body {
+    margin-left: "10vw";
+    margin-right: "10vw";
+}
+
+.home-page-chart-container {
+    border:"1px solid black";
+    border-radius:"5px";   
+}
