@@ -1,6 +1,6 @@
 import express from 'express';
 import databaseUtils from "../utils/databaseUtils";
-import CarbonIntensityRecord from "../types/carbonIntensityRecord";
+import {CarbonIntensityRecord} from "../types/carbonIntensityRecord";
 
 var utils = new databaseUtils();
 const router = express.Router();
@@ -47,7 +47,7 @@ router.get("/getCarbonIntensityRecordById", async (req, res) =>
 {
     try
     {
-        const id:number = req.query.id;
+        const id:number = Number(req.query.id);
         if(id === null || id === undefined || id === 0)
         {
             res.status(400).json("400: Bad Request");
@@ -290,4 +290,4 @@ router.post("/deleteCarbonIntensityRecord", async (req, res) =>
     }
 });
 
-module.exports = router;
+export default router;

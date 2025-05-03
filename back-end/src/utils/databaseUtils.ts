@@ -1,15 +1,16 @@
 import Database from 'better-sqlite3';
 import fs from 'fs';
-import CarbonIntensityRecord from './types/CarbonIntensityRecord';
+import {CarbonIntensityRecord} from "../types/carbonIntensityRecord"
 
 type StringMap<T = string> = { [key: string]: T };
 
 export default class databaseUtils {
+    db: any;
+    
     public constructor()
     {
         this.db = new Database('./database/database.db');
     }
-
 
     private CSVToJSON(data: string, delimiter = ",")
     {
