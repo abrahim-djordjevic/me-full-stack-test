@@ -5,23 +5,20 @@ import { Modal } from "react-bootstrap";
 const SummaryModal = (props: ModalProps) => 
 {
     return(
-        <Modal 
-            show={true}
-            size="lg"
+        <Modal
+            show={props.record !== null}
+            size="xl"
             centered={true}
         >
         <Modal.Header>
-            Summary
+            <h5>
+                Summary
+            </h5>
         </Modal.Header>
         <Modal.Body>
             {props.record.id}
         </Modal.Body>
         <Modal.Footer>
-            <button 
-                className="btn btn-success"
-            >
-                Submit
-            </button>
             <button 
                 className="btn btn-secondary"
                 onClick={props.cancelMethod}

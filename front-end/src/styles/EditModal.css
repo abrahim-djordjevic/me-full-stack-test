@@ -1,0 +1,20 @@
+.modal-body-container {
+    display: flex;
+    width:100%;
+}
+
+.modal-body-container label {
+    margin-right: 10px;
+}
+
+.modal-body-container .left-col,
+.modal-body-container .right-col {
+    flex: 1;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.modal-body-container .left-col > div,
+.modal-body-container .right-col > div {
+    justify-content: center;
+}

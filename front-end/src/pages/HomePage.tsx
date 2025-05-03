@@ -11,6 +11,7 @@ import "../styles/HomePage.css";
 import EditModal from '../components/EditModal';
 import DeleteModal from '../components/DeleteModal';
 import SummaryModal from '../components/SummaryModal';
+import useWebSocket from 'react-use-websocket';
 
 const HomePage = () =>
 {
@@ -23,6 +24,20 @@ const HomePage = () =>
     const [summaryRow, setSummaryRow] = useState<CarbonIntensityRecord | null>(null);
     const [rowsPerPage, setRowsPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
+
+    const { sendMessage, lastMessage, readyState,  } = useWebSocket(process.env.REACT_APP_WS_URL ?? "", {
+        onMessage: (msg: WebSocketEventMap['message']) => {
+                var results = JSON.parse(msg?.data);
+                if(results?.reloadTable === true && results?.data != null) {
+                    const records: CarbonIntensityRecord[] = results?.data;
+                    setCarbonRecords(records);
+                } else {
+                    console.log(msg?.data);
+                }
+        },
+        onOpen: () => console.log("connection established"),
+        onClose: () => console.log("connection closed"),
+    })
 
     const apiHelper = new APIHelper();
     // need to register chart
@@ -39,7 +54,13 @@ const HomePage = () =>
         if(carbonRecords.length <= 0) return;
         const data = generateChartData(carbonRecords);
         setChartData(data);
+        // reset page if you remove last item on a page
+        if(Math.ceil(carbonRecords.length / rowsPerPage) < page) setPage(1)
     }, [carbonRecords]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [rowsPerPage])
 
     return (
         <div className='home-page'>
@@ -196,9 +217,9 @@ const HomePage = () =>
                         </div>
                     }
                 </div>
-                {editRow !== null && <EditModal record={editRow} cancelMethod={() => setEditRow(null)}/>}
-                {deleteRow !== null && <DeleteModal record={deleteRow} cancelMethod={() => setDeleteRow(null)}/>}
-                {summaryRow !== null && <SummaryModal record={summaryRow} cancelMethod={() => setSummaryRow(null)}/>}
+                {editRow !== null && <EditModal record={editRow} cancelMethod={() => setEditRow(null)} submitMethod={() => sendMessage("notifyChartReload")}/>}
+                {deleteRow !== null && <DeleteModal record={deleteRow} cancelMethod={() => setDeleteRow(null)} submitMethod={() => sendMessage("notifyChartReload")}/>}
+                {summaryRow !== null && <SummaryModal record={summaryRow} cancelMethod={() => setSummaryRow(null)} submitMethod={null}/>}
             </div>
         </div>
     );

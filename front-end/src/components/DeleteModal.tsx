@@ -1,26 +1,41 @@
 import React from "react";
 import { ModalProps } from "../types/modalProps";
 import { Modal } from "react-bootstrap";
+import APIHelper from "../utils/APIHelper";
 
 const DeleteModal = (props: ModalProps) => 
 {
+    const onDeleteClick = async () => {
+        const helper = new APIHelper();
+        helper.deleteCarbonIntensityRecord(props.record.id).then(() => {
+            if(props.submitMethod !== null) {
+                props.submitMethod();
+            }
+        })
+    }
+
     return(
         <Modal 
-            show={true}
-            size="lg"
+            show={props.record !== null}
+            size="sm"
             centered={true}
         >
         <Modal.Header>
-            Delete
+            <h5>
+                Delete
+            </h5>
         </Modal.Header>
         <Modal.Body>
-            {props.record.id}
+            <div>
+                Are you sure you want to delete this record?
+            </div>
         </Modal.Body>
         <Modal.Footer>
             <button 
-                className="btn btn-success"
+                className="btn btn-danger"
+                onClick={async () => { await onDeleteClick() }}
             >
-                Submit
+                Delete
             </button>
             <button 
                 className="btn btn-secondary"

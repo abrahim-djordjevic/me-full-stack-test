@@ -1,3 +1,4 @@
+import { Tooltip } from "chart.js";
 import { CarbonIntensityRecord } from "../types/carbonIntensityRecord"
 
 export const generateChartData = (records:CarbonIntensityRecord[]) => 
@@ -90,7 +91,7 @@ export const generateChartData = (records:CarbonIntensityRecord[]) =>
                 borderColor: 'grey',
                 tension: 0.1
             },
-        ]
+        ],
     };
     return data;
 }
