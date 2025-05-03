@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useState } from 'react';
 import { CarbonIntensityRecord } from '../types/carbonIntensityRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil, faTrash, faEye, faCaretDown, faCaretUp, faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
@@ -8,13 +8,19 @@ import { Chart, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { generateChartData } from '../utils/ChartHelper';
 import "../styles/HomePage.css";
+import EditModal from '../components/EditModal';
+import DeleteModal from '../components/DeleteModal';
+import SummaryModal from '../components/SummaryModal';
 
-function HomePage()
+const HomePage = () =>
 {
     const [carbonRecords, setCarbonRecords] = useState<CarbonIntensityRecord[]>([]);
     const [chartData, setChartData] = useState<any>();
     const [showChart, setShowChart] = useState<boolean>(true);
     const [showTable, setShowTable] = useState<boolean>(true);
+    const [editRow, setEditRow] = useState<CarbonIntensityRecord | null>(null);
+    const [deleteRow, setDeleteRow] = useState<CarbonIntensityRecord | null>(null);
+    const [summaryRow, setSummaryRow] = useState<CarbonIntensityRecord | null>(null);
     const [rowsPerPage, setRowsPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
 
@@ -109,17 +115,26 @@ function HomePage()
                                             <td>{record.other}</td>
                                             <td>{record.total}</td>
                                             <td>
-                                                <button className='btn btn-warning edit-btn'>
+                                                <button 
+                                                    className='btn btn-warning edit-btn'
+                                                    onClick={() => setEditRow(record)}
+                                                >
                                                     <FontAwesomeIcon icon={faPencil} />
                                                 </button>     
                                             </td>
                                             <td>
-                                                <button className='btn btn-danger delete-btn'>
+                                                <button 
+                                                    className='btn btn-danger delete-btn'
+                                                    onClick={() => setDeleteRow(record)}
+                                                >
                                                     <FontAwesomeIcon icon={faTrash} />
                                                 </button>     
                                             </td>
                                             <td>
-                                                <button className='btn btn-primary summary-btn'>
+                                                <button 
+                                                    className='btn btn-primary summary-btn'
+                                                    onClick={() => setSummaryRow(record)}
+                                                >
                                                     <FontAwesomeIcon icon={faEye} />
                                                 </button>     
                                             </td>
@@ -181,6 +196,9 @@ function HomePage()
                         </div>
                     }
                 </div>
+                {editRow !== null && <EditModal record={editRow} cancelMethod={() => setEditRow(null)}/>}
+                {deleteRow !== null && <DeleteModal record={deleteRow} cancelMethod={() => setDeleteRow(null)}/>}
+                {summaryRow !== null && <SummaryModal record={summaryRow} cancelMethod={() => setSummaryRow(null)}/>}
             </div>
         </div>
     );
