@@ -1,6 +1,8 @@
 import Database from 'better-sqlite3';
 import fs from 'fs';
 import {CarbonIntensityRecord} from "../types/carbonIntensityRecord"
+import { createHash } from 'crypto';
+import dotenv from "dotenv";
 
 type StringMap<T = string> = { [key: string]: T };
 
@@ -10,6 +12,7 @@ export default class databaseUtils {
     public constructor()
     {
         this.db = new Database('./database/database.db');
+        dotenv.config();
     }
 
     private CSVToJSON(data: string, delimiter = ",")
@@ -127,7 +130,35 @@ export default class databaseUtils {
             ');';
         await this.db.prepare(query).run();
 
-        await this.addInitialData();
+        const recordCount = await this.getCarbonIntensityRecordsCount();
+        if(recordCount === 0) { await this.addInitialData(); }
 
+        await this.intialiseUserTable();
+    }
+
+    public async intialiseUserTable() {
+        var query = 'CREATE TABLE IF NOT EXISTS "Users" (' +
+        '"id"	INTEGER,' +
+        '"user"	TEXT,' +
+        '"password"	TEXT,' +
+        'PRIMARY KEY("id" AUTOINCREMENT)' +
+        ');';
+
+        await this.db.prepare(query).run();
+
+        await this.insertUser("user", "try");
+    }
+
+    public async insertUser(username: string, password: string) {
+        const hashedPassword: string = createHash('sha256').update(password).digest("base64");
+        var query = `INSERT INTO Users ('id', 'user', 'password') VALUES(NULL, '${username}', '${hashedPassword}');`;
+        await this.db.prepare(query).run();
+    }
+
+    public async checkUser(username: string, password: string) {
+        const hashedPassword: string = createHash('sha256').update(password).digest("base64");
+        var query = `SELECT * FROM Users WHERE user = '${username}' AND password = '${hashedPassword}';`;
+        const users:any[] = await this.db.prepare(query).all();
+        return users.length > 0;
     }
 };
