@@ -1,0 +1,17 @@
+.header {
+    padding-bottom:10px;
+    padding-top:10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-weight:bold;
+    border-bottom:1px solid gray;
+    display: flex;
+}
+
+.header-btn-container {
+    margin-left: auto;
+}
+
+.header-btn-container button {
+    margin-right: 10px;
+}

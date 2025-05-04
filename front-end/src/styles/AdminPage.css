@@ -1,0 +1,19 @@
+.admin-page-body {
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+
+.admin-page-table-container {
+    border:1px solid gray;
+    border-radius:5px;   
+    margin-bottom: 15px;
+}
+
+.user-records-btn-conatiner {
+    float:right;
+    padding: 10px 0px 10px 0px;
+}
+
+.user-records-btn-conatiner button {
+    margin-right: 10px;
+}

@@ -1,13 +1,13 @@
 import React from "react";
-import { ModalProps } from "../types/modalProps";
+import { RecordModalProps } from "../types/recordModalProps";
 import { Modal } from "react-bootstrap";
-import "../styles/EditModal.css"
+import "../styles/Modal.css"
 import APIHelper from "../utils/APIHelper";
 import moment from "moment";
 import { calculateTotal, getISOStringWithoutSecsAndMillisecs, validateNumericInput} from "../utils/modalUtils";
 
 
-const EditModal = (props: ModalProps) => 
+const EditRecordModal = (props: RecordModalProps) => 
 {
     const helper = new APIHelper();
 
@@ -17,9 +17,10 @@ const EditModal = (props: ModalProps) =>
         props.record.from = getISOStringWithoutSecsAndMillisecs(new Date(props.record.from));
         props.record.to = getISOStringWithoutSecsAndMillisecs(new Date(props.record.to));
 
-        helper.updateCarbonIntensityRecords(props.record).then(() => {
+        helper.updateCarbonIntensityRecord(props.record).then(() => {
             if(props.submitMethod !== null) {
                 props.submitMethod();
+                props.cancelMethod();
             }
         })
     };
@@ -268,4 +269,4 @@ const EditModal = (props: ModalProps) =>
     );
 }
 
-export default EditModal;
+export default EditRecordModal;

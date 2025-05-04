@@ -2,14 +2,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Modal, ModalBody } from "react-bootstrap";
-import { AddRecordModalProps } from "../types/addRecordModalProps";
+import { AddModalProps } from "../types/addModalProps";
+import "../styles/Modal.css"
 import moment from "moment";
 import { calculateTotal, getISOStringWithoutSecsAndMillisecs, validateNumericInput} from "../utils/modalUtils";
 import { CarbonIntensityRecord } from "../types/carbonIntensityRecord";
 import APIHelper from "../utils/APIHelper";
 
 
-const AddRecordButton = (props: AddRecordModalProps) => 
+const AddRecordButton = (props: AddModalProps) => 
 {
     const emptyRecord: CarbonIntensityRecord = {
         id:0,
@@ -42,13 +43,16 @@ const AddRecordButton = (props: AddRecordModalProps) =>
     const helper = new APIHelper()
 
     const onSubmitClick = async () => {
+        if(record === emptyRecord || record.from === "" || record.to === "") return;
+
         record.total = calculateTotal(record);
         record.from = getISOStringWithoutSecsAndMillisecs(new Date(record.from));
         record.to = getISOStringWithoutSecsAndMillisecs(new Date(record.to));
 
-        helper.addCarbonIntensityRecords(record).then(() => {
+        helper.addCarbonIntensityRecord(record).then(() => {
             if(props.submitMethod !== null) {
                 props.submitMethod();
+                setShowModal(false);
             }
         })
     }

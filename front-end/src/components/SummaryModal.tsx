@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ModalProps } from "../types/modalProps";
+import { RecordModalProps } from "../types/recordModalProps";
 import { Modal } from "react-bootstrap";
 import { Pie } from "react-chartjs-2";
 import { generatePieChartData, getChartOptions } from "../utils/ChartHelper";
 import "../styles/SummaryModal.css"
 
-const SummaryModal = (props: ModalProps) => 
+const SummaryModal = (props: RecordModalProps) => 
 {
     const [data, setData] = useState<any>(null);
     const options = getChartOptions();
