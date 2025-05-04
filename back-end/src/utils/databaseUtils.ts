@@ -54,13 +54,6 @@ export default class databaseUtils {
 
     }
 
-    public async checkIfTableExists()
-    {
-        var query = `SELECT count(*) as count FROM sqlite_master WHERE type='table' AND name='CarbonIntensityRecords'`;
-        var count = (await this.db.prepare(query).all())[0].count;
-        return count > 0;
-    }
-
     public async getCarbonIntensityRecordsCount()
     {
         var query = "SELECT count(*) as count FROM CarbonIntensityRecords";
@@ -184,7 +177,6 @@ export default class databaseUtils {
     }
 
     public async updateUser(user: UserWithPassword) {
-        console.log(user)
         var query = `UPDATE Users SET 'id'=${user.id}, 'user'='${user.user}' WHERE id = ${user.id}`;
         await this.db.prepare(query).run();
     }
