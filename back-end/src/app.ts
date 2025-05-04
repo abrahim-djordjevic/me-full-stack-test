@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.use(cors({
-    allowedHeaders: "Origin, X-Requested-With, Access-Control-Max-Age, Content-Type, Accept, x-cron-token, x-path",
+    allowedHeaders: "Origin, X-Requested-With, Access-Control-Max-Age, Content-Type, Accept, x-cron-token, x-path, Authorization",
     methods: "GET, POST, OPTIONS, DELETE, PUT",
     credentials: true
   }));

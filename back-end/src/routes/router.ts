@@ -345,7 +345,7 @@ router.post("/login", async (req, res) =>
         {
     
     
-            if(req.body.username === null || req.body.username === undefined)
+            if(req.body.username === null || req.body.username === undefined || req.body.password === null || req.body.password === undefined)
             {
                 res.status(400).json("400: Bad Request");
             }
