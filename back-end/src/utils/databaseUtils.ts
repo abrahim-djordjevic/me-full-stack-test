@@ -3,6 +3,8 @@ import fs from 'fs';
 import {CarbonIntensityRecord} from "../types/carbonIntensityRecord"
 import { createHash } from 'crypto';
 import dotenv from "dotenv";
+import { UserWithPassword } from '../types/userWithPassword';
+import { User } from '../types/user';
 
 type StringMap<T = string> = { [key: string]: T };
 
@@ -99,7 +101,7 @@ export default class databaseUtils {
 
     public async updateCarbonIntensityRecord(record: CarbonIntensityRecord)
     {
-        var query = `update CarbonIntensityRecords ` +
+        var query = `UPDATE CarbonIntensityRecords ` +
                     `SET 'id'=${record.id}, 'from'='${record.from}', 'to'='${record.to}', 'intensity_forecast'=${record.intensity_forecast}, 'intensity_actual'=${record.intensity_actual}, ` +
                     `'index'='${record.index}', 'gas'=${record.gas}, 'coal'=${record.coal}, 'biomass'=${record.biomass}, 'nuclear'=${record.nuclear}, 'hydro'=${record.hydro}, ` +
                     `'imports'=${record.imports}, 'wind'=${record.wind}, 'solar'=${record.solar}, 'other'=${record.other}, 'total'=${record.total} ` +
@@ -146,19 +148,44 @@ export default class databaseUtils {
 
         await this.db.prepare(query).run();
 
-        await this.insertUser("user", "try");
+        const userCount = await this.getUsers();
+        if(userCount.length === 0) { 
+            var user: UserWithPassword = {
+                id:0,
+                user:"user",
+                password:"try"
+            }
+            await this.insertUser(user);
+        }
     }
 
-    public async insertUser(username: string, password: string) {
-        const hashedPassword: string = createHash('sha256').update(password).digest("base64");
-        var query = `INSERT INTO Users ('id', 'user', 'password') VALUES(NULL, '${username}', '${hashedPassword}');`;
+    public async insertUser(user: UserWithPassword) {
+        const hashedPassword: string = createHash('sha256').update(user.password).digest("base64");
+        var query = `INSERT INTO Users ('id', 'user', 'password') VALUES(NULL, '${user.user}', '${hashedPassword}');`;
         await this.db.prepare(query).run();
     }
 
-    public async checkUser(username: string, password: string) {
+    public async checkUser(user: string, password: string) {
         const hashedPassword: string = createHash('sha256').update(password).digest("base64");
-        var query = `SELECT * FROM Users WHERE user = '${username}' AND password = '${hashedPassword}';`;
-        const users:any[] = await this.db.prepare(query).all();
+        var query = `SELECT * FROM Users WHERE user = '${user}' AND password = '${hashedPassword}';`;
+        const users:UserWithPassword[] = await this.db.prepare(query).all();
         return users.length > 0;
+    }
+
+    public async getUsers() {
+        var query = "SELECT * FROM Users";
+        const users:UserWithPassword[] = await this.db.prepare(query).all();
+        return users;
+    }
+
+    public async deleteUser(id:number) {
+        var query = `DELETE FROM Users WHERE id = ${id}`;
+        await this.db.prepare(query).run();
+    }
+
+    public async updateUser(user: UserWithPassword) {
+        console.log(user)
+        var query = `UPDATE Users SET 'id'=${user.id}, 'user'='${user.user}' WHERE id = ${user.id}`;
+        await this.db.prepare(query).run();
     }
 };

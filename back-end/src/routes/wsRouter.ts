@@ -19,9 +19,16 @@ wsRouter.ws("/", (ws, req) =>
                 connection.send(JSON.stringify({reloadTable: true, data: records}));
             })
         }
+        else if(msg == "notifyUserReload")
+        {
+            const records = await utils.getUsers();
+            connections.forEach((connection) => {
+                connection.send(JSON.stringify({reloadUsers: true, data: records}));
+            })
+        }
         else
         {
-            ws.send(msg);
+            ws.send(JSON.stringify({"message":msg}));
         }
     });
 
