@@ -16,7 +16,7 @@ wsRouter.ws("/", (ws, req) =>
         {
             const records = await utils.getAllCarbonIntensityRecords();
             connections.forEach((connection) => {
-                connection.send(JSON.stringify(records));
+                connection.send(JSON.stringify({reloadTable: true, data: records}));
             })
         }
         else
