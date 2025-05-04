@@ -1,0 +1,17 @@
+.summary-modal-body {
+    justify-content: center;
+    flex-direction: column;
+}
+
+.summary-modal-body .chart-title {
+    text-align: center;
+}
+
+.pie-chart-container {
+    height: 50vh;
+}
+
+canvas {
+    height: 100%;
+    width: 100%;
+}

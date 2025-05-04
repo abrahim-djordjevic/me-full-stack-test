@@ -1,22 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ModalProps } from "../types/modalProps";
 import { Modal } from "react-bootstrap";
+import { Pie } from "react-chartjs-2";
+import { generatePieChartData, getChartOptions } from "../utils/ChartHelper";
+import "../styles/SummaryModal.css"
 
 const SummaryModal = (props: ModalProps) => 
 {
+    const [data, setData] = useState<any>(null);
+    const options = getChartOptions();
+
+    useEffect(() => {
+        setData(generatePieChartData(props.record))
+    }, []);
+
     return(
         <Modal
             show={props.record !== null}
-            size="xl"
+            size="lg"
             centered={true}
         >
         <Modal.Header>
             <h5>
-                Summary
+                {`Summary for record: ${props.record.id}`}
             </h5>
         </Modal.Header>
         <Modal.Body>
-            {props.record.id}
+            <div className="modal-body-container summary-modal-body">
+                <div className="chart-title">
+                    <h5>Fuel Mix</h5>
+                </div>
+                <div className="pie-chart-container">
+                    {data != null && <Pie data={data} options={options} />}
+                </div>
+            </div>
         </Modal.Body>
         <Modal.Footer>
             <button 

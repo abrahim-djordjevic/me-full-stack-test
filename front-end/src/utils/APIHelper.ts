@@ -52,4 +52,18 @@ export default class APIHelper
         });
         return response.status === 200;
     }
+
+    public async addCarbonIntensityRecords(record: CarbonIntensityRecord)
+    {
+        const url = this.baseURL + "/addCarbonIntensityRecord";
+        const response = await fetch(url, {
+            method:"POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(record)
+        });
+        return response.status === 200;
+    }
 }

@@ -6,12 +6,14 @@ import { faPencil, faTrash, faEye, faCaretDown, faCaretUp, faCaretLeft, faCaretR
 import APIHelper from "../utils/APIHelper";
 import { Chart, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { generateChartData } from '../utils/ChartHelper';
+import { generateChartData, getChartOptions } from '../utils/ChartHelper';
 import "../styles/HomePage.css";
 import EditModal from '../components/EditModal';
 import DeleteModal from '../components/DeleteModal';
 import SummaryModal from '../components/SummaryModal';
 import useWebSocket from 'react-use-websocket';
+import AddRecordButton from '../components/AddRecordButton';
+import ExportJSONButton from '../components/ExportJSONButton';
 
 const HomePage = () =>
 {
@@ -24,6 +26,8 @@ const HomePage = () =>
     const [summaryRow, setSummaryRow] = useState<CarbonIntensityRecord | null>(null);
     const [rowsPerPage, setRowsPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
+
+    const options = getChartOptions();
 
     const { sendMessage, lastMessage, readyState,  } = useWebSocket(process.env.REACT_APP_WS_URL ?? "", {
         onMessage: (msg: WebSocketEventMap['message']) => {
@@ -79,7 +83,7 @@ const HomePage = () =>
                     </div>
                     {chartData !== undefined && showChart &&
                         <div className='chart-body'>
-                            <Line data={chartData}/>
+                            <Line data={chartData} options={options}/>
                         </div>
                     }
                 </div>
@@ -94,23 +98,27 @@ const HomePage = () =>
                     </div>
                     { showTable &&
                         <div className='table-body'>
+                            <div className='carbon-records-btn-conatiner'>
+                                <AddRecordButton submitMethod={() => sendMessage("notifyChartReload")}/>
+                                <ExportJSONButton records={carbonRecords} />
+                            </div>
                             <table className="carbon-records-table table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>From</th>
                                         <th>To</th>
-                                        <th>Intensity Forecast</th>
-                                        <th>Intensity Actual</th>
+                                        <th>Intensity Forecast (g/kWh)</th>
+                                        <th>Intensity Actual (g/kWh)</th>
                                         <th>Index</th>
-                                        <th>Gas</th>
-                                        <th>Coal</th>
-                                        <th>BioMass</th>
-                                        <th>Nuclear</th>
-                                        <th>Hydro</th>
-                                        <th>Imports</th>
-                                        <th>Wind</th>
-                                        <th>Solar</th>
-                                        <th>Other</th>
+                                        <th>Gas (%)</th>
+                                        <th>Coal (%)</th>
+                                        <th>Biomass (%)</th>
+                                        <th>Nuclear (%)</th>
+                                        <th>Hydro (%)</th>
+                                        <th>Imports (%)</th>
+                                        <th>Wind (%)</th>
+                                        <th>Solar (%)</th>
+                                        <th>Other (%)</th>
                                         <th>Total</th>
                                         <th>Edit</th>
                                         <th>Delete</th>

@@ -55,3 +55,29 @@
 .carbon-records-table {
     margin:0;
 }
+
+.chart-body {
+    height: 50vh;
+}
+
+.chart-body canvas {
+    height: 100%;
+    width: 100%;
+}
+
+table {
+    font-size: 15px;
+}
+
+table * {
+    text-align: center;
+}
+
+.carbon-records-btn-conatiner {
+    float:right;
+    padding: 10px 0px 10px 0px;
+}
+
+.carbon-records-btn-conatiner button {
+    margin-right: 10px;
+}
