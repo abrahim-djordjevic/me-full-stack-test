@@ -33,7 +33,7 @@ const EditRecordModal = (props: RecordModalProps) =>
         >
             <Modal.Header>
                 <h5>
-                    Edit
+                    Edit Record
                 </h5>
             </Modal.Header>
             <Modal.Body>
