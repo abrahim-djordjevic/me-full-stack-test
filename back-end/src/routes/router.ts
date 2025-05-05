@@ -345,7 +345,7 @@ router.post("/deleteCarbonIntensityRecord", async (req, res) =>
  *
  *    responses:
  *      '200':
- *        description: deleted record
+ *        description: user authenticated
  */
 router.post("/login", async (req, res) =>
 {
@@ -387,7 +387,7 @@ router.post("/login", async (req, res) =>
  *    - bearerAuth: []
  *    responses:
  *      '200':
- *        description: retrieved all records
+ *        description: retrieved all users
  */
 router.get("/admin/getAllUsers", async (req, res) =>
 {
@@ -424,7 +424,7 @@ router.get("/admin/getAllUsers", async (req, res) =>
  *                          type: string
  *    responses:
  *      '200':
- *        description: inserted record
+ *        description: inserted user
  */
 router.post("/admin/addUser", async (req, res) =>
 {
@@ -527,7 +527,7 @@ router.post("/admin/updateUser", async (req, res) =>
  *                          type: number
  *    responses:
  *      '200':
- *        description: updated user
+ *        description: deleted user
  */
 router.post("/admin/deleteUser", async (req, res) =>
 {
