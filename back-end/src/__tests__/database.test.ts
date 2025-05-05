@@ -79,3 +79,8 @@ test('Test checkUser', async () => {
     const result = await utils.checkUser("user", "try");
     expect(result);
 })
+
+test('Test checkUser with wrong credentials', async () => {
+    const result = await utils.checkUser("user", "try");
+    expect(!result);
+})

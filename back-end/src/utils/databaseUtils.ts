@@ -4,7 +4,6 @@ import {CarbonIntensityRecord} from "../types/carbonIntensityRecord"
 import { createHash } from 'crypto';
 import dotenv from "dotenv";
 import { UserWithPassword } from '../types/userWithPassword';
-import { User } from '../types/user';
 
 type StringMap<T = string> = { [key: string]: T };
 

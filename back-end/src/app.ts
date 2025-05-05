@@ -36,3 +36,6 @@ app.use('/api', router);
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+// needed for tests
+export default app;
